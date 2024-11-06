@@ -24,8 +24,8 @@
   SOFTWARE.
 */
 
-#ifndef TOCK_HAL_H
-#define TOCK_HAL_H
+#ifndef TOCK_RADIOLIB_HAL_H
+#define TOCK_RADIOLIB_HAL_H
 
 // include RadioLib
 #include <RadioLib.h>
@@ -38,20 +38,20 @@
 #include "libtock-sync/services/alarm.h"
 #include "libtock/kernel/read_only_state.h"
 
-#define RADIO_BUSY   1
-#define RADIO_DIO_1  2
-#define RADIO_DIO_3  3
-#define RADIO_RESET  4
+#define RADIOLIB_RADIO_BUSY   1
+#define RADIOLIB_RADIO_DIO_1  2
+#define RADIOLIB_RADIO_DIO_3  3
+#define RADIOLIB_RADIO_RESET  4
 // Skip the chips select as Tock handles this for us
-#define RADIO_NSS   RADIOLIB_NC
+#define RADIOLIB_RADIO_NSS   RADIOLIB_NC
 
 // define Arduino-style macros
-#define PIN_LOW                         (0x0)
-#define PIN_HIGH                        (0x1)
-#define PIN_INPUT                       (0x01)
-#define PIN_OUTPUT                      (0x03)
-#define PIN_RISING                      (0x01)
-#define PIN_FALLING                     (0x02)
+#define TOCK_RADIOLIB_PIN_LOW           (0x0)
+#define TOCK_RADIOLIB_PIN_HIGH          (0x1)
+#define TOCK_RADIOLIB_PIN_INPUT         (0x01)
+#define TOCK_RADIOLIB_PIN_OUTPUT        (0x03)
+#define TOCK_RADIOLIB_PIN_RISING        (0x01)
+#define TOCK_RADIOLIB_PIN_FALLING       (0x02)
 
 typedef void (*gpioIrqFn)(void);
 
@@ -83,11 +83,11 @@ static void lora_phy_gpio_Callback (int gpioPin,
     }
 }
 
-class TockHal : public RadioLibHal {
+class TockRadioLibHal : public RadioLibHal {
   public:
     // default constructor - initializes the base HAL and any needed private members
-    TockHal()
-      : RadioLibHal(PIN_INPUT, PIN_OUTPUT, PIN_LOW, PIN_HIGH, PIN_RISING, PIN_FALLING)  {
+    TockRadioLibHal()
+      : RadioLibHal(TOCK_RADIOLIB_PIN_INPUT, TOCK_RADIOLIB_PIN_OUTPUT, TOCK_RADIOLIB_PIN_LOW, TOCK_RADIOLIB_PIN_HIGH, TOCK_RADIOLIB_PIN_RISING, TOCK_RADIOLIB_PIN_FALLING)  {
     }
 
     void init() override {
@@ -103,9 +103,9 @@ class TockHal : public RadioLibHal {
         return;
       }
 
-      if (mode == PIN_OUTPUT) {
+      if (mode == TOCK_RADIOLIB_PIN_OUTPUT) {
           libtock_lora_phy_gpio_enable_output(pin);
-      } else if (mode == PIN_INPUT) {
+      } else if (mode == TOCK_RADIOLIB_PIN_INPUT) {
           libtock_lora_phy_gpio_enable_input(pin, libtock_pull_down);
       }
     }
